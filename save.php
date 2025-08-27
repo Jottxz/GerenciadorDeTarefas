@@ -21,21 +21,18 @@ try {
                 } else {
                     throw new Exception("Erro ao executar a consulta: " . $stmt->error);
                 }
- 
                 $stmt->close();
             } else {
-                throw new Exception("Erro ao preparar a consulta: " . $conn->error);
+                throw new Exception("Erro ao preparar a consulta:" . $conn->error);
             }
         } else {
             throw new Exception("O campo title é obrigatório!");
         }
     } else {
-        throw new Exception("Metódo de requisição inválido");
+        throw new Exception("Método de requisição inválido");
     }
 } catch (Exception $e) {
     echo "Erro: " . $e->getMessage();
 } finally {
     $conn->close();
 }
- 
- 
