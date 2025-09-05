@@ -1,3 +1,12 @@
+<?php
+ 
+session_start();
+if (!isset($_SESSION['user_id'])) {
+   header("Location: login.php");
+   exit();
+}
+?>
+ 
 <!DOCTYPE html>
 <html lang="pt-br">
  
@@ -20,11 +29,22 @@
                 <a class="navbar-brand" href="index.php">Crud PHP </a>
                 <form action="login.php" method="GET" class="d-inline">
                     <button type="submit" class="btn btn-secondary">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
+                <i class="fas fa-sign-out-alt"></i> Logout    
+                </button>
                 </form>
             </div>
         </nav>
+        <!-- Session Message -->
+         <?php if (isset($_SESSION['message'])):  ?>
+            <div class="alert alert-<?= $_SESSION['message_type']; ?> alert-dismissible fade show" role="alert">
+                <?= $_SESSION['message']; ?>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <?php unset($_SESSION['message']); ?>
+            <?php endif; ?>
+         <!-- /Session Message -->
         <main class="container p-4">
             <div class="row">
                 <div class="col-md-4">
@@ -71,8 +91,8 @@
  
                                         <td><?php echo $row['id']; ?></td>
                                         <td><?php echo $row['title']; ?></td>
-                                        <td><?php echo $row['description']; ?></td>
-                                        <td><?=date("d/m/Y" , strtotime($row['created_at'])); ?></td>
+                                        <td><?= substr($row['description'], 0, 20) . '...' ?></td>
+                                       <td><?=date("d/m/Y" , strtotime($row['created_at'])); ?></td>
                                         <td><a href="edit.php?id=<?= $row['id']; ?>" class="btn btn-secondary">
  
                                                 <i class="fas fa-marker"></i>
@@ -86,7 +106,7 @@
                                 }
                             } else {
                                 echo "<tr><td colspan='5'>Nenhuma tarefa encontrada!</td></tr>";
-                            }
+                            }-
                             $conn->close();
                             ?>
  
@@ -101,9 +121,15 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
- 
+    <script>
+        // Tmer para esconder a session message
+        setTimeout(() => {
+            const alert = document.querySelector('.alert');
+            if (alert) {
+                alert.style.display = 'none';
+            }
+        }, 1500);
+    </script>
 </body>
  
 </html>
- 
- 

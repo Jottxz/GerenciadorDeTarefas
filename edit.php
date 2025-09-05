@@ -1,11 +1,20 @@
 <?php
  
+ session_start();
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: login.php");
+        exit();
+    }
+ 
 require_once 'conn.php';
  
 $id = isset($_GET['id']) ? $_GET['id'] : null;
  
 if (!$id) {
     echo "ID da tarefa não fornecido!";
+    $_SESSION['message'] = "ID da tarefa não fornecido!";
+    $_SESSION['message_type'] = 'danger';
+     header("Location: index.php");
     exit();
 }
  
@@ -26,7 +35,10 @@ try {
         }
         $stmt->close();
     } else {
-        throw new Exception("Erro ao preparar a consulta " . $conn->error);
+    $_SESSION['message'] = "Erro ao preparar a consulta.";
+    $_SESSION['message_type'] = 'danger';
+     header("Location: index.php");
+     exit();
     }
 } catch (Exception $e) {
     echo "Erro " . $e->getMessage();
@@ -56,7 +68,12 @@ try {
     <div class="container">
         <nav class="navbar navbar-light bg-light">
             <div class="container">
-                <a class="navbar-brand" href="index.php">Crud PHP</a>
+                <a class="navba r-brand" href="index.php">Crud PHP</a>
+                <form action="logout.php" method="POST" class="d-inline">
+                    <button type="submit" class="btn btn-secondary">
+                <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+                </form>
             </div>
         </nav>
         <div class="container p-4">
@@ -80,11 +97,10 @@ try {
         </div>
     </div>
     <!-- BOOTSTRAP 4 SCRIPT -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
  
 </body>
  
 </html>
- 
